@@ -1,11 +1,22 @@
+import {Provider} from "react-redux";
+import {BrowserRouter} from "react-router-dom";
+import {Root} from "./routes/index.jsx";
+import {store} from "./store.js";
 
 
 function App() {
 
   return (
-    <>
-      <div className="uppercase">selam</div>
-    </>
+    <BrowserRouter
+        future={{
+            v7_startTransition: true,
+            v7_relativeSplatPath: true,
+        }}
+    >
+        <Provider store={store}>
+            <Root/>
+        </Provider>
+    </BrowserRouter>
   )
 }
 
