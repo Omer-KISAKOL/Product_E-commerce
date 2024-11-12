@@ -13,4 +13,8 @@ export const ProductType = {
     rate: PropTypes.number.isRequired,
     count: PropTypes.number.isRequired,
   }).isRequired,
+  size: PropTypes.string.isRequired,
+  width: PropTypes.string.isRequired,
+  height: PropTypes.string.isRequired,
+  borderRadius: PropTypes.string.isRequired,
 };
