@@ -16,6 +16,7 @@ class ProductsService {
       const response = await fetch(
           `${this.#baseURL}${API_CONFIG.ENDPOINTS.PRODUCTS}`
       );
+      console.log('Fetch işlemi yapıldı!!!')
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

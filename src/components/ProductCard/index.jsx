@@ -1,14 +1,14 @@
 import {useDispatch} from 'react-redux';
 import PropTypes from "prop-types";
-import {addToCart} from '../../store/slices/cartSlice.js';
-import {lazy, memo, Suspense, useCallback} from "react";
-import {LoadingCircle} from "../styles/LoadingCircle.jsx";
-import {ProductType} from "../../types/product.types.js";
-import {trimText} from "../../utils/TextTrim.js";
+import {addToCart} from '@/store/slices/cartSlice.js';
+import {memo, useCallback} from "react";
+import {ProductType} from "@/types/product.types.js";
+import {trimText} from "@/utils/TextTrim.js";
+import Link from "next/link.js";
+import LazyImage from "@/utils/LazyImage.jsx";
 
-const LazyImage = lazy(() => import("../../utils/LazyImage.jsx"));
 
-const ProductCard = memo(({ product }) => {
+const ProductCard = ({ product }) => {
     const dispatch = useDispatch();
 
     const handleAddToCart = useCallback(() => {
@@ -16,12 +16,10 @@ const ProductCard = memo(({ product }) => {
     }, [dispatch, product]);
 
     return (
-        <div>
+        <Link href={`/product/${product.title}`}>
             <div>
                 <div>
-                    <Suspense fallback={<div><LoadingCircle size="30px"/></div>}>
-                        <LazyImage src={product.images[0]} alt={product.title} loading="lazy" width={75}/>
-                    </Suspense>
+                    <LazyImage src={product.images[0]} alt={product.title} loading="lazy" width={150} height={175}/>
                 </div>
                 <p>{product.rating} ★</p>
             </div>
@@ -33,11 +31,12 @@ const ProductCard = memo(({ product }) => {
             </div>
 
             <div>
-                <button onClick={handleAddToCart} >Add to Cart</button>
+                <button className="bg-blue-700 text-white py-1 px-2 rounded-lg" onClick={handleAddToCart}>Add to Cart
+                </button>
             </div>
-        </div>
+        </Link>
     );
-});
+}
 
 ProductCard.propTypes = {
     product: PropTypes.shape(ProductType).isRequired,

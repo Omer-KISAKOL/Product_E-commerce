@@ -1,12 +1,11 @@
 import {useSelector, useDispatch} from 'react-redux';
-import {addToCart, removeFromCart} from '../../store/slices/cartSlice.js';
+import {addToCart, removeFromCart} from '@/store/slices/cartSlice.js';
 import {lazy, Suspense} from "react";
-import {LoadingCircle} from "../styles/LoadingCircle.jsx";
+import {LoadingCircle} from "@/styles/LoadingCircle.jsx";
 import { IoTrashOutline } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
-import {trimText} from "../../utils/TextTrim.js";
-
-const LazyImage = lazy(() => import("../../utils/LazyImage.jsx"));
+import {trimText} from "@/utils/TextTrim.js";
+import LazyImage from "@/utils/LazyImage.jsx";
 
 export default function Cart() {
     const cart = useSelector((state) => state.cart);
@@ -24,15 +23,13 @@ export default function Cart() {
                         <div key={item.id}>
                             <div>
                                 <div>
-                                    <Suspense fallback={<div><LoadingCircle size="30px"/></div>}>
-                                        <LazyImage src={item.images[0]} alt={item.title} loading="lazy" width={75}/>
-                                    </Suspense>
+                                    <LazyImage src={item.images[0]} alt={item.title} loading="lazy" width={150} height={175}/>
                                 </div>
                                 <p>{item.rating} ★</p>
                             </div>
 
                             <div>
-                                <h3>{trimText(item.title, 30) }</h3>
+                            <h3>{trimText(item.title, 30) }</h3>
                                 <p>{item.category}</p>
                                 <p>${item.price * item.quantity}</p>
                             </div>

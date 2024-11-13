@@ -1,13 +1,13 @@
 import React, {useMemo, useState, useEffect, Suspense, lazy} from 'react';
 import {useQuery} from "react-query";
 import {useSelector} from 'react-redux';
-import {productsService} from "../../services/products.service";
-import {filterProducts} from "../../utils/FilterProducts.js";
+import {productsService} from "@/services/products.service.js";
+import {filterProducts} from "@/utils/FilterProducts.js";
 import useInView from "../../hooks/useInView.js";
-import {LoadingCircle} from "../styles/LoadingCircle.jsx";
-import {API_CONFIG, UI_CONFIG} from "../../constants/config";
+import {LoadingCircle} from "@/styles/LoadingCircle.jsx";
+import {API_CONFIG, UI_CONFIG} from "@/constants/config.js";
 import NoFound from "../NoFound/index.jsx";
-import {Skeleton} from "../styles/SkeletonImage.jsx";
+import {Skeleton} from "@/styles/SkeletonImage.jsx";
 
 const ProductCard = lazy(() => import("../ProductCard/index.jsx"));
 
@@ -20,7 +20,7 @@ const ProductList = () => {
     const search = useSelector((state) => state.filters.search);
 
     const {data: products, isLoading, error,} = useQuery("products", () => productsService.fetchProducts(), {
-        staleTime: API_CONFIG.STALE_TIME, // 5 minutes
+        staleTime: API_CONFIG.STALE_TIME, // 15 minutes
         refetchOnWindowFocus: false,
     });
 
@@ -52,11 +52,9 @@ const ProductList = () => {
 
     return (
         <div>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-3 gap-4">
                 {visibleProducts.map((product) => (
-                    <div
-                        key={product.id}
-                    >
+                    <div key={product.id}>
                         <Suspense fallback={<div><Skeleton width="300" height="385" borderRadius="8"/></div>}>
                             <ProductCard product={product}/>
                         </Suspense>

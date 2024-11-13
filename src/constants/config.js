@@ -1,10 +1,10 @@
 export const API_CONFIG = {
-  BASE_URL: " https://dummyjson.com",
+  BASE_URL: "https://dummyjson.com",
   ENDPOINTS: {
     PRODUCTS: "/products?limit=200",
   },
   CACHE_TIME: 1000 * 60 * 5, // 5 minutes
-  STALE_TIME: 1000 * 60 * 5, // 5 minutes
+  STALE_TIME: 1000 * 60 * 15, // 15 minutes
 };
 
 export const UI_CONFIG = {

@@ -27,9 +27,7 @@ export const filterProducts = (products, {category, priceRange}, sort, search) =
             case "price-up":
                 return b.price - a.price;
             case "popularity":
-                return b.rating.rate === a.rating.rate
-                    ? b.rating.count - a.rating.count
-                    : b.rating.rate - a.rating.rate;
+                return  b.rating - a.rating;
             default:
                 return 0;
         }

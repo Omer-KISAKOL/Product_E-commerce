@@ -1,8 +1,10 @@
 import {useDispatch, useSelector} from 'react-redux';
-import {setFilter, setSearch, setSort} from '../../store/slices/filterSlice.js';
+import {setFilter, setSearch, setSort} from '@/store/slices/filterSlice.js';
 import {useState} from "react";
+import classNames from 'classnames';
+import categories from "@/data/categories.js";
 
-export default function FilterSidebar() {
+export default function Navbar() {
     const dispatch = useDispatch();
     const search = useSelector(state => state.filters.search);
     const [category, setCategory] = useState('');
@@ -49,38 +51,48 @@ export default function FilterSidebar() {
 
                 <div>
                     <h3>Category</h3>
-                    {['All', 'Electronics', 'Jewelery', "Men's Clothing", "Women's Clothing"].map((cat) => (
-                        <div
-                            key={cat}
-                            className={category === cat.toLowerCase() ? 'active' : ''}
-                            onClick={() => handleCategoryChange(cat.toLowerCase())}
-                        >
-                            <input
-                                type="radio"
-                                checked={category === cat.toLowerCase()}
-                                onChange={() => handleCategoryChange(cat.toLowerCase())}
-                            />
-                            {cat}
-                        </div>
-                    ))}
+                    <div className="grid grid-cols-5 gap-3">
+                        {categories.map((cat) => (
+                            <div
+                                key={cat}
+                                className={classNames(
+                                    'your-base-styles',
+                                    { 'bg-blue-500 text-white': category === cat.toLowerCase() }
+                                )}
+                                onClick={() => handleCategoryChange(cat.toLowerCase())}
+                            >
+                                <input
+                                    type="radio"
+                                    checked={category === cat.toLowerCase()}
+                                    onChange={() => handleCategoryChange(cat.toLowerCase())}
+                                />
+                                {cat}
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
                 <div>
                     <h3>Price Range</h3>
-                    {['All', '0-100', '100-200', '200-500', '500-1000'].map((range) => (
-                        <div
-                            key={range}
-                            className={priceRange === range.toLowerCase() ? 'active' : ''}
-                            onClick={() => handlePriceRangeChange(range.toLowerCase())}
-                        >
-                            <input
-                                type="radio"
-                                checked={priceRange === range.toLowerCase()}
-                                onChange={() => handlePriceRangeChange(range.toLowerCase())}
-                            />
-                            ${range.split('-').join(' - $')}
-                        </div>
-                    ))}
+                    <div className="grid grid-cols-5 ">
+                        {['All', '0-100', '100-200', '200-500', '500-1000'].map((range) => (
+                            <div
+                                key={range}
+                                className={classNames(
+                                    'your-base-styles',
+                                    { 'bg-blue-500 text-white': priceRange === range.toLowerCase() }
+                                )}
+                                onClick={() => handlePriceRangeChange(range.toLowerCase())}
+                            >
+                                <input
+                                    type="radio"
+                                    checked={priceRange === range.toLowerCase()}
+                                    onChange={() => handlePriceRangeChange(range.toLowerCase())}
+                                />
+                                ${range.split('-').join(' - $')}
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </>
