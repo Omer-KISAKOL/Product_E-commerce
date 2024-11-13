@@ -1,11 +1,12 @@
 import {useDispatch} from 'react-redux';
 import PropTypes from "prop-types";
 import {addToCart} from '@/store/slices/cartSlice.js';
-import {memo, useCallback} from "react";
+import {lazy, Suspense, useCallback} from "react";
 import {ProductType} from "@/types/product.types.js";
 import {trimText} from "@/utils/TextTrim.js";
-import Link from "next/link.js";
-import LazyImage from "@/utils/LazyImage.jsx";
+const LazyImage = lazy(() => import('@/utils/LazyImage.jsx'))
+import StarRatings from "react-star-ratings/build/star-ratings.js";
+import {LoadingCircle} from "@/styles/LoadingCircle.jsx";
 
 
 const ProductCard = ({ product }) => {
@@ -15,13 +16,22 @@ const ProductCard = ({ product }) => {
         dispatch(addToCart(product));
     }, [dispatch, product]);
 
+
     return (
-        <Link href={`/product/${product.title}`}>
+        <div>
             <div>
                 <div>
-                    <LazyImage src={product.images[0]} alt={product.title} loading="lazy" width={150} height={175}/>
+                    <Suspense fallback={<LoadingCircle/>}>
+                        <LazyImage src={product.images[0]} alt={product.title} width={150} height={175}/>
+                    </Suspense>
                 </div>
-                <p>{product.rating} ★</p>
+                <StarRatings
+                    rating={product.rating}
+                    starRatedColor="blue"
+                    starDimension="20px"
+                    starSpacing="1px"
+                    numberOfStars={5}
+                />
             </div>
 
             <div>
@@ -31,10 +41,10 @@ const ProductCard = ({ product }) => {
             </div>
 
             <div>
-                <button className="bg-blue-700 text-white py-1 px-2 rounded-lg" onClick={handleAddToCart}>Add to Cart
+                <button className="bg-blue-700 text-white py-1 px-2 rounded-lg hover:bg-blue-900" onClick={handleAddToCart}>Add to Cart
                 </button>
             </div>
-        </Link>
+        </div>
     );
 }
 

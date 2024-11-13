@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 
 //custom hook for splitting long product loads
-const useInView = () => {
+const useInView = (callback) => {
     const [isIntersecting, setIntersecting] = useState(false);
     const ref = useRef(null);
 
-    // useEffect(() => {
-    //     if (isIntersecting) {
-    //         callback();
-    //     }
-    // }, [isIntersecting]);
+    useEffect(() => {
+        if (isIntersecting) {
+            callback();
+        }
+    }, [isIntersecting]);
 
     useEffect(() => {
         const observer = new IntersectionObserver(([entry]) => {
@@ -19,7 +19,7 @@ const useInView = () => {
         return () => {
             observer.disconnect();
         };
-    }, [ref]);
+    }, [ref, callback]);
 
     return { ref, isIntersecting };
 };

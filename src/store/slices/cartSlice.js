@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {getLocal, setLocal} from "../../utils/LocalStorage.js";
+import {getLocal, setLocal} from "@/utils/LocalStorage.js";
 
 const cartSlice = createSlice({
     name: "cart",

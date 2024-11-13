@@ -3,6 +3,7 @@ import {Provider} from "react-redux";
 import {store} from "../store/store.js";
 import {QueryClient, QueryClientProvider} from "react-query";
 import PropTypes from "prop-types";
+import Navbar from "@/components/Navbar/index.jsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,9 +17,10 @@ const queryClient = new QueryClient({
 export default function App({ Component, pageProps }) {
   return (
       <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <Component {...pageProps} />
-        </QueryClientProvider>
+            <QueryClientProvider client={queryClient}>
+              <Navbar/>
+              <Component {...pageProps} />
+            </QueryClientProvider>
       </Provider>
   );
 }
