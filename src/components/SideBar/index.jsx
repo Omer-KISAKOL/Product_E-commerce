@@ -48,7 +48,7 @@ export default function SideBar({ isOpen, onClose }) {
         >
             <div className="flex justify-between items-center mb-4">
                 <h2 className="font-semibold text-lg flex items-center">Filtreler</h2>
-                <button onClick={onClose}><IoMdCloseCircleOutline/></button>
+                <button onClick={onClose} className="hover:text-green-600"><IoMdCloseCircleOutline size={25}/></button>
             </div>
 
             <div className="lg-desktop:hidden block mb-4 ">

@@ -1,6 +1,6 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
 
-### next-sitemap redux-persist
+### next-sitemap react-modal
 
 ## Getting Started
 

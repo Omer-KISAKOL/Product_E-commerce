@@ -8,7 +8,7 @@ export default function ProductPage() {
     const { id } = router.query;
 
     return (
-        <div>
+        <div className="flex flex-col justify-center place-items-center w-full">
             <Suspense fallback={<LoadingCircle size="40px"/>}>
                 <Product id={id} />
             </Suspense>

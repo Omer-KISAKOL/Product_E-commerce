@@ -8,10 +8,12 @@ import { IoIosSearch } from "react-icons/io";
 import Link from "next/link";
 import { FaOpencart } from "react-icons/fa";
 import { RiAccountPinCircleLine } from "react-icons/ri";
+import {useRouter} from "next/router";
 
 
 export default function Navbar() {
     const dispatch = useDispatch();
+    const router = useRouter();
     const search = useSelector(state => state.filters.search);
 
     const [category, setCategory] = useState('');
@@ -24,6 +26,7 @@ export default function Navbar() {
     const [isPriceRangeMobilOpen, setIsPriceRangeMobilOpen] = useState(false);
     const categoryRef = useRef(null);
     const priceRangeRef = useRef(null);
+    const isHome = router.pathname === "/";
 
 
     const handleCategoryChange = (value) => {
@@ -39,6 +42,20 @@ export default function Navbar() {
     const handleSortChange = (e) => {
         dispatch(setSort(e.target.value));
     };
+
+    const handleInputChange = (e) => {
+        dispatch(setSearch(e.target.value))
+
+        if (router.pathname !== "/") {
+            router.push("/");
+        }
+    };
+
+    // Yönlendirme sonrasında input alanını odaklamak için
+    useEffect(() => {
+        const input = document.getElementById("search-input");
+        if (input) input.focus();
+    }, [router.pathname]);
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -69,34 +86,36 @@ export default function Navbar() {
                         <FaOpencart size={40}/>
                     </Link>
 
-                    <div className="flex space-x-6">
+                    {isHome && (
+                        <div className="flex space-x-6">
 
-                        <div className="lg-desktop:block hidden">
-                            <select id="sort" onChange={handleSortChange}
-                                    className=" border-2 bg-gray-50 border-gray-300 text-gray-900 rounded-lg focus:ring-green-600 focus:border-green-600 block w-full p-2.5">
-                                <option className="pe-2" value="">Sort by</option>
-                                <option value="price-down">Price: Low to High</option>
-                                <option value="price-up">Price: High to Low</option>
-                                <option value="popularity">Popularity</option>
-                            </select>
-                        </div>
+                            <div className="lg-desktop:block hidden">
+                                <select id="sort" onChange={handleSortChange}
+                                        className=" border-2 bg-gray-50 border-gray-300 text-gray-900 rounded-lg focus:ring-green-600 focus:border-green-600 block w-full p-2.5">
+                                    <option className="pe-2" value="">Sort by</option>
+                                    <option value="price-down">Price: Low to High</option>
+                                    <option value="price-up">Price: High to Low</option>
+                                    <option value="popularity">Popularity</option>
+                                </select>
+                            </div>
 
-                        <div className="lg-desktop:flex justify-center hidden">
-                            <button
-                                className="text-gray-700 font-semibold hover:text-green-600 relative"
-                                onClick={() => setIsCategoryOpen(!isCategoryOpen)}>
-                                Categories
-                            </button>
-                        </div>
+                            <div className="lg-desktop:flex justify-center hidden">
+                                <button
+                                    className="text-gray-700 font-semibold hover:text-green-600 relative"
+                                    onClick={() => setIsCategoryOpen(!isCategoryOpen)}>
+                                    Categories
+                                </button>
+                            </div>
 
-                        <div className="lg-desktop:flex justify-center hidden">
-                            <button
-                                className="text-gray-700 font-semibold hover:text-green-600 relative"
-                                onClick={() => setIsPriceRangeOpen(!isPriceRangeOpen)}>
-                                Price Range
-                            </button>
+                            <div className="lg-desktop:flex justify-center hidden">
+                                <button
+                                    className="text-gray-700 font-semibold hover:text-green-600 relative"
+                                    onClick={() => setIsPriceRangeOpen(!isPriceRangeOpen)}>
+                                    Price Range
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     <div className="flex items-center bg-gray-100 rounded-full px-4 py-1 space-x-2 w-64">
                         <input
@@ -105,14 +124,14 @@ export default function Navbar() {
                             placeholder="Search Product..."
                             className="bg-transparent focus:outline-none w-full text-md"
                             value={search}
-                            onChange={(e) => dispatch(setSearch(e.target.value))}
+                            onChange={handleInputChange}
                         />
                         <button>
                             <IoIosSearch size={25}/>
                         </button>
                     </div>
 
-                    <div className="flex items-center space-x-6">
+                    <div className="flex items-center space-x-6 me-4">
                         <Link href="/cart" target="_blank"
                               className="flex items-center gap-2 border-2 py-1 px-2 border-gray-500 rounded-xl text-gray-700 hover:text-green-600 hover:border-green-600">
                             Cart <FaOpencart/>
@@ -190,85 +209,92 @@ export default function Navbar() {
                     </div>
                 )}
             </div>
-            <div className="flex items-center justify-center space-x-6 mt-5">
-                <div className="lg-desktop:hidden flex justify-center">
-                    <button
-                        className="text-gray-700 font-semibold hover:text-green-600 relative"
-                        onClick={() => setIsCategoryMobilOpen(!isCategoryMobilOpen)}>
-                        Categories
-                    </button>
-                </div>
-
-                <div className="lg-desktop:hidden flex justify-center">
-                    <button
-                        className="text-gray-700 font-semibold hover:text-green-600 relative"
-                        onClick={() => setIsPriceRangeMobilOpen(!isPriceRangeMobilOpen)}>
-                        Price Range
-                    </button>
-                </div>
-            </div>
-            {isCategoryMobilOpen && (
-                <div ref={categoryRef}
-                     className="lg-desktop:hidden grid grid-cols-2 phone:grid-cols-3 text-md text-center items-center gap-3 p-3 scroll-auto justify-center bg-white origin-top animate-open">
-                    {categories.map((cat) => (
-                        <div
-                            key={cat.value}
-                            className={classNames(
-                                'p-1 border rounded cursor-pointer',
-                                {'bg-green-600 text-white': category === cat.value.toLowerCase()}
-                            )}
-                            onClick={() => handleCategoryChange(cat.value.toLowerCase())}
-                        >
-                            <input
-                                type="radio"
-                                className="mr-2 hidden"
-                                checked={category === cat.value.toLowerCase()}
-                                onChange={() => handleCategoryChange(cat.value.toLowerCase())}
-                            />
-                            {cat.name}
-                        </div>
-                    ))}
-                </div>
-            )}
-            {isPriceRangeMobilOpen && (
-                <div
-                    ref={priceRangeRef}
-                    className="lg-desktop:hidden p-4 phone:inset-x-6 laptop:inset-x-1/4 justify-center bg-white origin-top animate-open"
-                >
-                    <div className="p-2 border rounded cursor-pointer flex items-center gap-2">
-                        <input
-                            type="number"
-                            placeholder="Min"
-                            className="w-full p-1 border-2 rounded focus:outline-none focus:border-green-600"
-                            value={minPrice}
-                            onChange={(e) => setMinPrice(e.target.value)}
-                        />
-                        <span>-</span>
-                        <input
-                            type="number"
-                            placeholder="Max"
-                            className="w-full p-1 border-2 rounded focus:outline-none focus:border-green-600"
-                            value={maxPrice}
-                            onChange={(e) => setMaxPrice(e.target.value)}
-                        />
+            {isHome && (
+                <div className="flex items-center justify-center space-x-6 mt-5">
+                    <div className="lg-desktop:hidden flex justify-center">
                         <button
-                            onClick={() => handlePriceRangeChange(`${minPrice}-${maxPrice}`)}
-                            className=" ml-2 p-2 bg-blue-500 text-white rounded"
-                        >
-                            Search
+                            className="text-gray-700 font-semibold hover:text-green-600 relative"
+                            onClick={() => setIsCategoryMobilOpen(!isCategoryMobilOpen)}>
+                            Categories
                         </button>
+                    </div>
+
+                    <div className="lg-desktop:hidden flex justify-center">
                         <button
-                            onClick={() => {
-                                setMinPrice('');
-                                setMaxPrice('');
-                                handlePriceRangeChange('all');
-                            }}
-                            className="ml-2 p-2 bg-gray-500 text-white rounded"
-                        >
-                            Clear
+                            className="text-gray-700 font-semibold hover:text-green-600 relative"
+                            onClick={() => setIsPriceRangeMobilOpen(!isPriceRangeMobilOpen)}>
+                            Price Range
                         </button>
                     </div>
                 </div>
+            )}
+
+            {isCategoryMobilOpen && (
+                isHome && (
+                    <div ref={categoryRef}
+                         className="lg-desktop:hidden grid grid-cols-2 phone:grid-cols-3 text-md text-center items-center gap-3 p-3 scroll-auto justify-center bg-white origin-top animate-open">
+                        {categories.map((cat) => (
+                            <div
+                                key={cat.value}
+                                className={classNames(
+                                    'p-1 border rounded cursor-pointer',
+                                    {'bg-green-600 text-white': category === cat.value.toLowerCase()}
+                                )}
+                                onClick={() => handleCategoryChange(cat.value.toLowerCase())}
+                            >
+                                <input
+                                    type="radio"
+                                    className="mr-2 hidden"
+                                    checked={category === cat.value.toLowerCase()}
+                                    onChange={() => handleCategoryChange(cat.value.toLowerCase())}
+                                />
+                                {cat.name}
+                            </div>
+                        ))}
+                    </div>
+                )
+            )}
+            {isPriceRangeMobilOpen && (
+                isHome && (
+                    <div
+                        ref={priceRangeRef}
+                        className="lg-desktop:hidden p-4 phone:inset-x-6 laptop:inset-x-1/4 justify-center bg-white origin-top animate-open">
+
+                        <div className="p-2 border rounded cursor-pointer flex items-center gap-2">
+                            <input
+                                type="number"
+                                placeholder="Min"
+                                className="w-full p-1 border-2 rounded focus:outline-none focus:border-green-600"
+                                value={minPrice}
+                                onChange={(e) => setMinPrice(e.target.value)}
+                            />
+                            <span>-</span>
+                            <input
+                                type="number"
+                                placeholder="Max"
+                                className="w-full p-1 border-2 rounded focus:outline-none focus:border-green-600"
+                                value={maxPrice}
+                                onChange={(e) => setMaxPrice(e.target.value)}
+                            />
+                            <button
+                                onClick={() => handlePriceRangeChange(`${minPrice}-${maxPrice}`)}
+                                className=" ml-2 p-2 bg-blue-500 text-white rounded"
+                            >
+                                Search
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setMinPrice('');
+                                    setMaxPrice('');
+                                    handlePriceRangeChange('all');
+                                }}
+                                className="ml-2 p-2 bg-gray-500 text-white rounded"
+                            >
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                )
             )}
         </>
     );
