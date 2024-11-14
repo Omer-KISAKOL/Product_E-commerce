@@ -6,6 +6,10 @@ const filterSlice = createSlice({
         filter: {},
         sort: "",
         search: "",
+        discountSort: "",
+        stockSort: "",
+        addedDateSort: "",
+        brand: "",
     },
     reducers: {
         setFilter(state, action) {
@@ -18,8 +22,20 @@ const filterSlice = createSlice({
         setSearch(state, action) {
             state.search = action.payload;
         },
+        setDiscountSort(state, action) {
+            state.discountSort = action.payload;
+        },
+        setStockSort(state, action) {
+            state.stockSort = action.payload;
+        },
+        setAddedDateSort(state, action) {
+            state.addedDateSort = action.payload;
+        },
+        setBrand(state, action) {
+            state.brand = action.payload;
+        },
     },
 });
 
-export const {setFilter, setSort, setSearch} = filterSlice.actions;
+export const {setBrand, setFilter, setSort, setSearch, setDiscountSort, setAddedDateSort, setStockSort} = filterSlice.actions;
 export default filterSlice.reducer;

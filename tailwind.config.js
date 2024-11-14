@@ -7,6 +7,14 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    screens: {
+      'phone': '400px',
+      'tablet': '640px',
+      'laptop': '1024px',
+      'desktop': '1280px',
+      'lg-desktop': '1536px',
+      'xl-desktop': '1800px',
+    },
     extend: {
       colors: {
         background: "var(--background)",

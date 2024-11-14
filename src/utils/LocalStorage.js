@@ -1,18 +1,14 @@
 export const getLocal = (key, defaultValue) => {
-    try {
-        const data = localStorage.getItem(key);
-        return data ? JSON.parse(data) : defaultValue;
-    } catch (error) {
-        console.error("Error loading from local storage", error);
-        return defaultValue;
+    if (typeof window !== 'undefined') {
+        const storedValue = localStorage.getItem(key);
+        return storedValue ? JSON.parse(storedValue) : defaultValue;
     }
+    return defaultValue;
 };
 
 export const setLocal = (key, value) => {
-    try {
+    if (typeof window !== 'undefined') {
         localStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-        console.error("Error saving to local storage", error);
     }
 };
 

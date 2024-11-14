@@ -8,17 +8,20 @@ import {LoadingCircle} from "@/styles/LoadingCircle.jsx";
 import {API_CONFIG, UI_CONFIG} from "@/constants/config.js";
 import NoFound from "../NoFound/index.jsx";
 import {Skeleton} from "@/styles/SkeletonImage.jsx";
-import {useRouter} from "next/router";
 const ProductCard = lazy(() => import("../ProductCard/index.jsx"));
 
 const ProductList = () => {
     const [page, setPage] = useState(1);
     const [visibleProducts, setVisibleProducts] = useState([]);
-    const router = useRouter();
 
     const filter = useSelector((state) => state.filters.filter);
     const sort = useSelector((state) => state.filters.sort);
     const search = useSelector((state) => state.filters.search);
+    const discountSort = useSelector((state) => state.filters.discountSort);
+    const stockSort = useSelector((state) => state.filters.stockSort);
+    const addedDateSort = useSelector((state) => state.filters.addedDateSort);
+    const brand = useSelector((state) => state.filters.brand);
+
 
     const {data: products, isLoading, error} = useQuery("products", () => productsService.fetchProducts(), {
         staleTime: API_CONFIG.STALE_TIME, // 15 minutes
@@ -27,8 +30,8 @@ const ProductList = () => {
 
     const filteredProducts = useMemo(() => {
         if (!products) return [];
-        return filterProducts(products, filter, sort, search);
-    }, [products, filter, sort, search]);
+        return filterProducts(products, filter, sort, search, discountSort, stockSort, addedDateSort, brand);
+    }, [products, filter, sort, search, discountSort, stockSort, addedDateSort, brand]);
 
     //determining how long the sequence will be long
     useEffect(() => {
@@ -51,17 +54,12 @@ const ProductList = () => {
 
     console.log(visibleProducts, filteredProducts);
 
-    const handleProductClick = (id) => {
-        router.push(`/product?id=${id}`);
-    };
-
-    return (<div>
-        <div className="grid grid-cols-3 gap-4">
+    return (<div className="flex flex-col justify-center place-items-center mt-8">
+        <div className="grid grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-2 desktop:grid-cols-3 lg-desktop:grid-cols-4 gap-14  ">
             {visibleProducts.map((product) => (
                 <div
                     key={product.id}
-                    onClick={() => handleProductClick(product.id)}
-                    className="block p-4 border border-gray-200 rounded hover:bg-gray-100 cursor-pointer">
+                    className="">
                     <Suspense fallback={<Skeleton width="300" height="385" borderRadius="8"/>}>
                         <ProductCard product={product}/>
                     </Suspense>

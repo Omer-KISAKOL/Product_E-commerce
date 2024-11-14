@@ -4,10 +4,14 @@ import {getLocal, setLocal} from "@/utils/LocalStorage.js";
 const cartSlice = createSlice({
     name: "cart",
     initialState: {
-        items: getLocal("cartItems", []),
-        totalAmount: getLocal("totalAmount", 0),
+        items: [],
+        totalAmount: 0,
     },
     reducers: {
+        setCart(state, action) {
+            state.items = action.payload.items;
+            state.totalAmount = action.payload.totalAmount;
+        },
         addToCart(state, action) {
             const item = state.items.find((i) => i.id === action.payload.id);
             if (item) {
@@ -35,5 +39,5 @@ const cartSlice = createSlice({
     },
 });
 
-export const {addToCart, removeFromCart} = cartSlice.actions;
+export const {setCart,addToCart, removeFromCart} = cartSlice.actions;
 export default cartSlice.reducer;

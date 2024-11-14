@@ -1,16 +1,27 @@
-import React, {lazy, Suspense, useEffect, useState} from "react";
+import React, {lazy, Suspense, useCallback, useEffect, useState} from "react";
 import {Skeleton} from "@/styles/SkeletonImage.jsx";
 import {LoadingCircle} from "@/styles/LoadingCircle.jsx";
 import StarRatings from "react-star-ratings/build/star-ratings.js";
 import {API_CONFIG} from "@/constants/config.js";
-import NoFound from "@/components/NoFound/index.jsx";
+import {addToCart} from "@/store/slices/cartSlice.js";
+import {useDispatch} from "react-redux";
 const LazyImage = lazy(() => import('@/utils/LazyImage.jsx'))
 
 export default function Product({id}) {
     const numericId = parseInt(id, 10);
     const [product, setProduct] = useState(null)
+    const [selectedImage, setSelectedImage] = useState('');
+    const [selectedIndex, setSelectedIndex] = useState(0);
+    const dispatch = useDispatch();
 
-    console.log(numericId)
+    const handleImageClick = (img, index) => {
+        setSelectedImage(img);
+        setSelectedIndex(index);
+    };
+
+    const handleAddToCart = useCallback(() => {
+        dispatch(addToCart(product));
+    }, [dispatch, product]);
 
     useEffect(() => {
 
@@ -38,7 +49,7 @@ export default function Product({id}) {
             <div className="max-w-4xl mx-auto p-6">
                 {/* Breadcrumbs */}
                 <div className="text-gray-500 text-sm mb-4">
-                    Electronics / {product.category} / {product.title}
+                    Home / {product.category.charAt(0).toUpperCase() + product.category.slice(1)} / {product.title}
                 </div>
 
                 {/* Main Product Section */}
@@ -47,11 +58,11 @@ export default function Product({id}) {
                     <div className="flex flex-col items-center md:items-start">
                         <Suspense fallback={<Skeleton />}>
                             <LazyImage
-                                src={product.images[0]}
+                                src={selectedImage ? selectedImage : product.images[0]}
                                 alt={product.title}
                                 width={400}
                                 height={400}
-                                className="rounded-lg mb-4"
+                                className="rounded-lg mb-4 transition-transform duration-500 ease-in-out transform hover:scale-105"
                             />
                         </Suspense>
                         {/* Additional Images */}
@@ -62,7 +73,9 @@ export default function Product({id}) {
                                         src={img}
                                         alt={`Image ${index + 1}`}
                                         loading="lazy"
-                                        className="w-20 h-20 rounded-lg object-cover"/>
+                                        className={`w-20 h-20 rounded-lg object-cover cursor-pointer ${selectedIndex === index ? 'border-2 border-blue-500' : ''}`}
+                                        onClick={() => handleImageClick(img, index)}
+                                    />
                                 </Suspense>
                             ))}
                         </div>
@@ -95,7 +108,7 @@ export default function Product({id}) {
                         <div className="mb-4">
                             <StarRatings
                                 rating={product.rating}
-                                starRatedColor="blue"
+                                starRatedColor="#08ac0a"
                                 starDimension="20px"
                                 starSpacing="1px"
                                 numberOfStars={5}
@@ -130,7 +143,9 @@ export default function Product({id}) {
                         {/* CTA Buttons */}
                         <div className="flex gap-4 mb-6">
                             <button className="bg-green-600 text-white px-6 py-3 rounded-lg">Buy Now</button>
-                            <button className="border border-gray-300 px-6 py-3 rounded-lg">Add to Cart</button>
+                            <button className="border border-gray-300 px-6 py-3 rounded-lg"
+                                    onClick={handleAddToCart}>Add to Cart
+                            </button>
                         </div>
 
                         {/* Delivery Info */}
