@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  BASE_URL: "https://dummyjson.com",
+  BASE_URL: process.env.NEXT_PUBLIC_API_URL || "https://dummyjson.com",
   ENDPOINTS: {
     PRODUCTS: "/products?limit=200",
     PRODUCT: "/products",
