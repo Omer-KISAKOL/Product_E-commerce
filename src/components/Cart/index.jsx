@@ -2,13 +2,14 @@ import {useSelector, useDispatch} from 'react-redux';
 import {addToCart, removeFromCart, setCart} from '@/store/slices/cartSlice.js';
 import { IoTrashOutline } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
-import {trimText} from "@/utils/TextTrim.js";
 import LazyImage from "@/utils/LazyImage.jsx";
 import React, {useEffect, useState} from "react";
 import StarRatings from "react-star-ratings/build/star-ratings.js";
 import {getLocal} from "@/utils/LocalStorage.js";
+import {useRouter} from "next/router";
 
 export default function Cart() {
+    const router = useRouter();
     const cart = useSelector((state) => state.cart);
     const items = useSelector((state) => state.cart.items);
     const dispatch = useDispatch();
@@ -22,13 +23,13 @@ export default function Cart() {
         }
     }, [dispatch]);
 
-    console.log(items);
+    const handleProductClick = (id) => {
+        router.push(`/product?id=${id}`);
+    };
 
     return (
-
-
         <div className="max-w-7xl mx-auto p-4 grid grid-cols-1 laptop:grid-cols-2 gap-8">
-            {/* Left Section - Review Item and Shipping */}
+
             <div className="lg:col-span-2 space-y-6">
                 <h2 className="text-2xl font-semibold">Review Item And Shipping</h2>
 
@@ -37,11 +38,13 @@ export default function Cart() {
                         items.map((item) => (
                             <div key={item.id} className="flex border-b pb-4 mb-4">
 
-                                <LazyImage src={item.images[0]} alt={item.title} loading="lazy" width={150} height={175}/>
+                                <span onClick={() => handleProductClick(item.id)} className="cursor-pointer">
+                                    <LazyImage src={item.images[0]} alt={item.title} loading="lazy" width={150} height={175}/>
+                                </span>
 
                                 <div className="flex w-full items-center justify-between">
                                     <div className="flex flex-col ">
-                                        <h3 className="text-lg font-semibold">{item.title}</h3>
+                                        <h3 className="text-lg font-semibold cursor-pointer" onClick={() => handleProductClick(item.id)}>{item.title}</h3>
                                         <p className="text-gray-500">{item.category}</p>
                                         <div className="flex gap-2 mt-2 border-2 border-green-600/40 rounded-full px-2 py-1 w-fit">
                                             <button onClick={() => dispatch(removeFromCart(item))}
@@ -58,8 +61,19 @@ export default function Cart() {
                                     </div>
 
 
-                                    <div className="flex space-x-2 mt-2 me-2 self-end">
-                                        <p className="text-lg font-bold">
+                                    <div className="flex flex-col h-full justify-between space-x-2 mt-2 me-2">
+                                        <div className="flex items-center gap-1 self-start">
+                                            <StarRatings
+                                                rating={item.rating}
+                                                starRatedColor="#08ac0a"
+                                                starDimension="16px"
+                                                starSpacing="0.5px"
+                                                numberOfStars={5}
+                                                className="mt-2"
+                                            />
+                                            <p className="text-sm text-green-800">{item.rating}</p>
+                                        </div>
+                                        <p className="text-lg font-bold self-end">
                                             ${Math.floor(item.price * item.quantity)}
                                             <span className="text-sm align-text-bottom">
                                                 {(item.price * item.quantity % 1).toFixed(2).toString().slice(1)}
@@ -158,63 +172,5 @@ export default function Cart() {
                 </div>
             </div>
         </div>
-
-
-
-        // <div>
-        //     <h3>Shopping Cart</h3>
-        //
-        //     <div>
-        //         {items.length > 0 ? (
-        //             items.map((item) => (
-        //                 <div key={item.id}>
-        //                     <div>
-        //                         <div>
-        //                             <LazyImage src={item.images[0]} alt={item.title} loading="lazy" width={150} height={175}/>
-        //                         </div>
-        //                         <div>
-        //                             <StarRatings
-        //                                 rating={item.rating}
-        //                                 starRatedColor="#08ac0a"
-        //                                 starDimension="20px"
-        //                                 starSpacing="1px"
-        //                                 numberOfStars={5}
-        //                             />
-        //                         </div>
-        //                     </div>
-        //
-        //                     <div>
-        //                     <h3>{trimText(item.title, 30) }</h3>
-        //                         <p>{item.category}</p>
-        //                         <p>${item.price * item.quantity}</p>
-        //                     </div>
-        //
-        //                     <div>
-        //                         <button onClick={() => dispatch(removeFromCart(item))}><IoTrashOutline/></button>
-        //                         <p>{item.quantity}</p>
-        //                         <button onClick={() => dispatch(addToCart(item))}><FaPlus/></button>
-        //                     </div>
-        //                 </div>
-        //             ))
-        //         ) : (
-        //             <div>
-        //                 Your cart is empty!
-        //             </div>
-        //         )
-        //         }
-        //     </div>
-        //
-        //     <div>
-        //         {cart.totalAmount ? (
-        //             <div>
-        //                 <h3>Total: ${cart.totalAmount.toFixed(2)}</h3>
-        //             </div>
-        //         ) : (
-        //             <h3>0</h3>
-        //         )}
-        //         <button>Complete order</button>
-        //     </div>
-        //
-        // </div>
     );
 }
