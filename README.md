@@ -1,15 +1,5 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
 
-# Project Dependencies
-
-- **next-sitemap**: Automatically generates sitemap files for SEO in Next.js projects.
-- **react-modal**: Provides a customizable modal component for React applications.
-- **redux**: A state management library for predictable state updates.
-- **tailwindcss**: A utility-first CSS framework for building responsive designs.
-- **prop-types**: Runtime type checking for React props to ensure component correctness.
-- **react-query**: Handles server state management with caching and synchronization.
-
-
 ## Getting Started
 
 1. **Clone the repository**:
@@ -29,6 +19,16 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
     ```bash
     pnpm run dev
     ```
+
+# Project Dependencies
+
+- **next-sitemap**: Automatically generates sitemap files for SEO in Next.js projects.
+- **react-modal**: Provides a customizable modal component for React applications.
+- **redux**: A state management library for predictable state updates.
+- **Tailwind CSS**: A utility-first CSS framework for building responsive designs.
+- **prop-types**: Runtime type checking for React props to ensure component correctness.
+- **react-query**: Handles server state management with caching and synchronization.
+- 
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
