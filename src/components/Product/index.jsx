@@ -11,6 +11,8 @@ import { FaChevronRight } from "react-icons/fa6";
 import {IoMdCloseCircleOutline} from "react-icons/io";
 import { LiaShippingFastSolid } from "react-icons/lia";
 import { GiCheckMark } from "react-icons/gi";
+import {useRouter} from "next/router";
+import Head from "next/head";
 const LazyImage = lazy(() => import('@/utils/LazyImage.jsx'))
 
 const customStyles = {
@@ -49,6 +51,7 @@ export default function Product({id}) {
     const [animateBounce, setAnimateBounce] = useState(false)
     const openModal = () => setModalIsOpen(true);
     const closeModal = () => setModalIsOpen(false);
+    const router = useRouter();
 
     const handleImageClick = (img, index) => {
         setSelectedImage(img);
@@ -95,16 +98,25 @@ export default function Product({id}) {
         }
     }, [numericId]);
 
-    console.log(product)
-
     if (!product) return <div className="w-dvw min-h-dvh flex justify-center items-center"><LoadingCircle/></div>;
-
+    if (router.isFallback) {
+        return <div className="w-dvw min-h-dvh flex justify-center items-center"><LoadingCircle/></div>;
+    }
     return (
-        <div className="flex flex-col justify-center place-items-center  container">
+        <>
+            <Head>
+                <title>{product.title}</title>
+                <meta name="description" content={product.description}/>
+                <meta property="og:title" content={product.title}/>
+                <meta property="og:description" content={product.description}/>
+                <meta name="keywords" content={`${product.category}, ${product.brand}`}/>
+            </Head>
 
-            <div className="max-w-6xl mx-auto my-6">
-                {/* Breadcrumbs */}
-                <div className="text-gray-500 text-sm mb-4">
+            <div className="flex flex-col justify-center place-items-center  container">
+
+                <div className="max-w-6xl mx-auto my-6">
+                    {/* Breadcrumbs */}
+                    <div className="text-gray-500 text-sm mb-4">
                     Home / {product.category.charAt(0).toUpperCase() + product.category.slice(1)} / {product.title}
                 </div>
 
@@ -289,5 +301,7 @@ export default function Product({id}) {
             </div>
 
         </div>
+
+        </>
     );
 }
