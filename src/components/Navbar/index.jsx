@@ -9,25 +9,27 @@ import Link from "next/link";
 import { FaOpencart } from "react-icons/fa";
 import { RiAccountPinCircleLine } from "react-icons/ri";
 import {useRouter} from "next/router";
-
+import {getLocal} from "@/utils/LocalStorage";
+import {setCart} from "@/store/slices/cartSlice";
 
 export default function Navbar() {
     const dispatch = useDispatch();
     const router = useRouter();
     const search = useSelector(state => state.filters.search);
+    const items = useSelector((state) => state.cart.items);
 
     const [category, setCategory] = useState('');
-    const [priceRange, setPriceRange] = useState('');
     const [minPrice, setMinPrice] = useState('')
     const [maxPrice, setMaxPrice] = useState('')
     const [isCategoryOpen, setIsCategoryOpen] = useState(false);
     const [isPriceRangeOpen, setIsPriceRangeOpen] = useState(false);
     const [isCategoryMobilOpen, setIsCategoryMobilOpen] = useState(false);
     const [isPriceRangeMobilOpen, setIsPriceRangeMobilOpen] = useState(false);
+    const [animateBounce, setAnimateBounce] = useState(false);
+    const [animatPing, setAnimatPing] = useState(false)
     const categoryRef = useRef(null);
     const priceRangeRef = useRef(null);
     const isHome = router.pathname === "/";
-
 
     const handleCategoryChange = (value) => {
         dispatch(setFilter({type: 'category', value: value}));
@@ -36,7 +38,6 @@ export default function Navbar() {
 
     const handlePriceRangeChange = (value) => {
         dispatch(setFilter({type: 'priceRange', value: value}));
-        setPriceRange(value);
     };
 
     const handleSortChange = (e) => {
@@ -51,7 +52,20 @@ export default function Navbar() {
         }
     };
 
-    // Yönlendirme sonrasında input alanını odaklamak için
+    useEffect(() => {
+        if (items.length > 0) {
+            setAnimateBounce(true);
+            setAnimatPing(true)
+
+            // Animasyonun bitmesini bekleyip animasyonu kapat
+            const timer = setTimeout(() => {
+                setAnimateBounce(false);
+            }, 430); // 1 saniye animasyonu sürdür
+
+            return () => clearTimeout(timer);
+        }
+    }, [items.length]);
+
     useEffect(() => {
         const input = document.getElementById("search-input");
         if (input) input.focus();
@@ -133,12 +147,18 @@ export default function Navbar() {
 
                     <div className="flex items-center space-x-6 me-4">
                         <Link href="/cart" target="_blank"
-                              className="flex items-center gap-2 border-2 py-1 px-2 border-gray-500 rounded-xl text-gray-700 hover:text-green-600 hover:border-green-600">
+                              className={`relative flex items-center gap-2 border-2 py-1 px-2 border-gray-500 rounded-xl text-gray-700 hover:text-green-600 hover:border-green-600 ${animateBounce ? 'animate-bounce' : ''}`}>
+                            <span className="absolute flex h-3 w-3 -top-1 -right-1">
+                              <span className={`absolute h-full w-full rounded-full bg-green-600 opacity-75 ${animatPing ? 'animate-ping' : ''}`}></span>
+                              <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                            </span>
+
+
                             Cart <FaOpencart/>
                         </Link>
                         <button
                             className="flex items-center gap-2 border-2 py-1 px-2 border-gray-500 rounded-xl text-gray-700 hover:text-green-600 hover:border-green-600">
-                            Account <RiAccountPinCircleLine/>
+                        Account <RiAccountPinCircleLine/>
                         </button>
                     </div>
 

@@ -1,21 +1,31 @@
 import {useDispatch} from 'react-redux';
 import PropTypes from "prop-types";
 import {addToCart} from '@/store/slices/cartSlice.js';
-import {lazy, Suspense, useCallback} from "react";
+import React, {lazy, Suspense, useCallback, useState} from "react";
 import {ProductType} from "@/types/product.types.js";
 import {trimText} from "@/utils/TextTrim.js";
 import StarRatings from "react-star-ratings/build/star-ratings.js";
 import {LoadingCircle} from "@/styles/LoadingCircle.jsx";
 import { FaRegHeart } from "react-icons/fa";
 import {useRouter} from "next/router";
+import {GiCheckMark} from "react-icons/gi";
 const LazyImage = lazy(() => import('@/utils/LazyImage.jsx'))
 
 const ProductCard = ({ product }) => {
     const router = useRouter();
     const dispatch = useDispatch();
+    const [animateBounce, setAnimateBounce] = useState(false)
+
 
     const handleAddToCart = useCallback(() => {
         dispatch(addToCart(product));
+        setAnimateBounce(true);
+
+        const timer = setTimeout(() => {
+            setAnimateBounce(false);
+        }, 1000);
+
+        return () => clearTimeout(timer);
     }, [dispatch, product]);
 
     const handleProductClick = (id) => {
@@ -67,10 +77,11 @@ const ProductCard = ({ product }) => {
 
             <div className="my-3 px-3 flex justify-start">
                 <button
-                    className="px-3 bg-transparent border-2 border-black text-black py-1 rounded-2xl hover:bg-green-900 hover:border-green-900 hover:text-white transition-colors duration-200"
+                    className="flex items-center gap-2 px-3 bg-transparent border-2 border-black text-black py-1 rounded-2xl hover:bg-green-900 hover:border-green-900 hover:text-white transition-colors duration-200"
                     onClick={handleAddToCart}
                 >
                     Add to Cart
+                    {animateBounce && (<GiCheckMark size={18}/>) }
                 </button>
             </div>
         </div>

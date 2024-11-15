@@ -9,6 +9,8 @@ import Modal from 'react-modal';
 import { FaChevronLeft } from "react-icons/fa6";
 import { FaChevronRight } from "react-icons/fa6";
 import {IoMdCloseCircleOutline} from "react-icons/io";
+import { LiaShippingFastSolid } from "react-icons/lia";
+import { GiCheckMark } from "react-icons/gi";
 const LazyImage = lazy(() => import('@/utils/LazyImage.jsx'))
 
 const customStyles = {
@@ -29,6 +31,8 @@ const customStyles = {
         bottom: 'auto',
         transform: 'translate(-50%, -50%)',
         overflow: 'hidden',
+        maxWidth: '800px',
+        maxHeight: '600px',
     },
 };
 
@@ -42,6 +46,7 @@ export default function Product({id}) {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const dispatch = useDispatch();
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [animateBounce, setAnimateBounce] = useState(false)
     const openModal = () => setModalIsOpen(true);
     const closeModal = () => setModalIsOpen(false);
 
@@ -64,6 +69,14 @@ export default function Product({id}) {
 
     const handleAddToCart = useCallback(() => {
         dispatch(addToCart(product));
+        setAnimateBounce(true);
+
+        const timer = setTimeout(() => {
+            setAnimateBounce(false);
+        }, 1000);
+
+        return () => clearTimeout(timer);
+
     }, [dispatch, product]);
 
     useEffect(() => {
@@ -103,8 +116,8 @@ export default function Product({id}) {
                             <LazyImage
                                 src={selectedImage ? selectedImage : product.images[0]}
                                 alt={product.title}
-                                width={600}
-                                height={600}
+                                width={400}
+                                height={400}
                                 className="rounded-lg mb-4 transition-transform duration-500 ease-in-out transform hover:scale-105 cursor-pointer"
                                 onClick={openModal}
                             />
@@ -142,8 +155,8 @@ export default function Product({id}) {
                                             <LazyImage
                                                 src={selectedImage ? selectedImage : product.images[0]}
                                                 alt={`Selected Image ${selectedIndex + 1}`}
-                                                width={800}
-                                                height={800}
+                                                width={400}
+                                                height={400}
                                                 className="rounded-lg mb-4 transition-transform duration-400 ease-in-out transform hover:scale-105"
                                             />
                                         </Suspense>
@@ -187,85 +200,88 @@ export default function Product({id}) {
                             <p className="text-sm text-gray-700">({product.reviews.length})</p>
                         </div>
 
-                        <div className="flex items-center py-4">
+                        <div className="flex items-center gap-14 py-4">
                             <span className="text-2xl font-medium">
                                 ${Math.floor(product.price)}
                                 <span
                                     className="text-sm align-text-bottom">{(product.price % 1).toFixed(2).toString().slice(1)}</span>
                             </span>
-                            <span className="text-sm text-gray-500 ml-2">Discount: {product.discountPercentage}%</span>
-                        </div>
-
-                        {/* Availability and Brand */}
-                        <p className="mb-4">
-                            <span className="font-medium">Brand:</span> {product.brand} <br/>
-                            <span className="font-medium">Availability:</span> {product.availabilityStatus}
-                        </p>
-
-                        {/* Dimensions and Weight */}
-                        <div className="mb-4">
-                            <p className="font-medium">Dimensions:</p>
-                            <p>Depth: {product.dimensions.depth} cm, Height: {product.dimensions.height} cm,
-                                Width: {product.dimensions.width} cm</p>
-                            <p><span className="font-medium">Weight:</span> {product.weight} g</p>
-                        </div>
-
-                        {/* Minimum Order Quantity */}
-                        <p className="mb-4">
-                            <span className="font-medium">Minimum Order Quantity:</span> {product.minimumOrderQuantity}
-                        </p>
-
-                        {/* Stock */}
-                        <p className="text-red-500 mb-4">Only {product.stock} Items Left!</p>
-
-                        {/* SKU and Barcode */}
-                        <p className="mb-4">
-                            <span className="font-medium">SKU:</span> {product.sku} <br/>
-                            <span className="font-medium">Barcode:</span> {product.meta.barcode}
-                        </p>
-
-                        {/* Shipping and Warranty Information */}
-                        <p className="mb-4">
-                            <span className="font-medium">Shipping:</span> {product.shippingInformation} <br/>
-                            <span className="font-medium">Warranty:</span> {product.warrantyInformation}
-                        </p>
-
-                        {/* Return Policy */}
-                        <p className="mb-4">
-                            <span className="font-medium">Return Policy:</span> {product.returnPolicy}
-                        </p>
-
-                        {/* CTA Buttons */}
-                        <div className="flex gap-4 mb-6">
-                            <button className="bg-green-600 text-white px-6 py-3 rounded-lg">Buy Now</button>
-                            <button className="border border-gray-300 px-6 py-3 rounded-lg"
-                                    onClick={handleAddToCart}>Add to Cart
+                            <span
+                                className="text-sm text-green-900 bg-green-100 py-2 px-4 rounded-lg ml-2">Discount: {product.discountPercentage}%</span>
+                            <button
+                                className="flex items-center gap-2 border-2 py-2 px-4 bg-green-600 border-green-600 rounded-3xl text-white hover:text-green-600 hover:border-green-600 hover:bg-white"
+                                onClick={handleAddToCart}>
+                                Add to Cart
+                                {animateBounce && (<GiCheckMark size={18}/>) }
                             </button>
                         </div>
 
-                        {/* Delivery Info */}
-                        <div className="mt-6 space-y-2">
-                            <div className="flex items-center">
-                                <span className="text-green-600">Free Delivery</span>
-                                <input
-                                    type="text"
-                                    placeholder="Enter your Postal Code"
-                                    className="ml-2 px-2 py-1 border border-gray-300 rounded"
-                                />
+                        <div className="text-[#fa0000] mb-4">Only {product.stock} Items Left!</div>
+
+                        <div className="text-sm mb-2 flex items-center gap-2"><LiaShippingFastSolid size={20}/>{product.shippingInformation}</div>
+
+
+                        <div className="grid grid-cols-1 gap-x-4">
+                            <div className="flex items-center py-2 px-4 bg-gray-100">
+                                <span className="font-semibold w-1/2">Brand:</span>
+                                <span className="w-1/2">{product.brand}</span>
                             </div>
-                            <p className="text-sm text-gray-500">{product.returnPolicy}</p>
+                            <div className="flex items-center py-2 px-4 bg-white">
+                                <span className="font-semibold w-1/2">Availability:</span>
+                                <span className="w-1/2">{product.availabilityStatus}</span>
+                            </div>
+                            <div className="flex items-center py-2 px-4 bg-gray-100">
+                                <span className="font-semibold w-1/2">Dimensions:</span>
+                                <span className="w-1/2">
+                                    <p>{product.dimensions.depth} - {product.dimensions.height} - {product.dimensions.width} cm</p>
+                                </span>
+                            </div>
+                            <div className="flex items-center py-2 px-4 bg-white">
+                                <span className="font-semibold w-1/2">Weight:</span>
+                                <span className="w-1/2">{product.weight} g</span>
+                            </div>
+                            <div className="flex items-center py-2 px-4 bg-gray-100">
+                                <span className="font-semibold w-1/2">Minimum Order Quantity:</span>
+                                <span className="w-1/2">{product.minimumOrderQuantity}</span>
+                            </div>
+                            <div className="flex items-center py-2 px-4 bg-white">
+                                <span className="font-semibold w-1/2">Warranty:</span>
+                                <span className="w-1/2">{product.warrantyInformation}</span>
+                            </div>
+                            <div className="flex items-center py-2 px-4 bg-gray-100">
+                                <span className="font-semibold w-1/2">SKU:</span>
+                                <span className="w-1/2">{product.sku}</span>
+                            </div>
+                            <div className="flex items-center py-2 px-4 bg-white">
+                                <span className="font-semibold w-1/2">Barcode:</span>
+                                <span className="w-1/2">{product.meta.barcode}</span>
+                            </div>
+                            <div className="mt-6 space-y-2">
+                                <p className="text-sm text-gray-500">{product.returnPolicy}</p>
+                            </div>
                         </div>
+
                     </div>
                 </div>
 
-                {/* Reviews */}
                 <div className="mt-8">
                     <h2 className="text-xl font-medium mb-4">Customer Reviews</h2>
                     <div className="space-y-4">
                         {product.reviews.map((review, index) => (
-                            <div key={index} className="border-b border-gray-300 pb-4">
-                            <p className="font-medium">{review.reviewerName} - {review.rating} ⭐</p>
-                                <p className="text-gray-500 text-sm">{new Date(review.date).toLocaleDateString()}</p>
+                            <div key={index} className="bg-gray-100 py-3 px-5 rounded-2xl max-w-lg">
+                                <div className="font-medium flex items-center gap-2 text-sm">
+                                    <StarRatings
+                                        rating={review.rating}
+                                        starRatedColor="#08ac0a"
+                                        starDimension="16px"
+                                        starSpacing="0.5px"
+                                        numberOfStars={5}
+                                    />
+                                    <p className="text-gray-500">{new Date(review.date).toLocaleDateString()}</p>
+                                    <span>|</span>
+                                    <p>{review.reviewerName}</p>
+                                </div>
+
                                 <p className="mt-2">{review.comment}</p>
                             </div>))}
                     </div>
