@@ -1,20 +1,34 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
 
-### next-sitemap react-modal
+# Project Dependencies
+
+- **next-sitemap**: Automatically generates sitemap files for SEO in Next.js projects.
+- **react-modal**: Provides a customizable modal component for React applications.
+- **redux**: A state management library for predictable state updates.
+- **tailwindcss**: A utility-first CSS framework for building responsive designs.
+- **prop-types**: Runtime type checking for React props to ensure component correctness.
+- **react-query**: Handles server state management with caching and synchronization.
+
 
 ## Getting Started
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. **Clone the repository**:
+    ```bash
+    git clone https://github.com/Omer-KISAKOL/Product_E-commerce.git
+    cd product-catalog
+    ```
+2. **Install dependencies**:
+    ```bash
+    pnpm install
+    ```
+3. **Build Project**:
+    ```bash
+    pnpm run build
+    ```
+4. **Start the Project**:
+    ```bash
+    pnpm run dev
+    ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
